@@ -42,19 +42,6 @@ export REQUEST_ID=$(openssl rand -base64 32)
 
 $selected_buildpack/bin/compile "$build_root" "$cache_root"
 
-echo "-----> Discovering process types"
-
-$selected_buildpack/bin/release "$build_root" > /build/app/.release
-
-if [[ -f "$build_root/Procfile" ]]; then
-  types=$(ruby -e "require 'yaml';puts YAML.load_file('$build_root/Procfile').keys().join(', ')")
-  echo "       Procfile declares types -> $types"
-fi
-default_types=$(ruby -e "require 'yaml';puts (YAML.load_file('$build_root/.release')['default_process_types'] || {}).keys().join(', ')")
-[[ $default_types ]] && echo "       Default process types for $buildpack_name -> $default_types"
-
-mkdir -p $build_root/.profile.d
-ruby -e "require 'yaml';(YAML.load_file('$build_root/.release')['config_vars'] || {}).each{|k,v| puts \"#{k}=#{v}\"}" > $build_root/.profile.d/config_vars
 
 cat > /exec <<EOF
 #!/bin/bash
@@ -72,13 +59,13 @@ export HOME=/app
 for file in $app_root/.profile.d/*; do source \$file; done
 hash -r
 cd $app_root
-if [[ -f Procfile ]]; then
-    ruby -e "require 'yaml';puts YAML.load_file('Procfile')['\$1']" | bash
-else
-    ruby -e "require 'yaml';puts (YAML.load_file('.release')['default_process_types'] || {})['\$1']" | bash
-fi
+
+main_js=$(python -c "import sys, json; json.load(sys.stdin).get('main', 'index.js')" < package.json)
+node $main_js $@
+
 EOF
 chmod +x /start
 
 rm -fR /app
 mv /build/app /
+
