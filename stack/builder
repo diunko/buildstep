@@ -53,6 +53,8 @@ cd $app_root
 EOF
 chmod +x /exec
 
+main_js=$(python -c "import sys, json; print json.load(sys.stdin).get('main', 'index.js')" < $app_root/package.json)
+
 cat > /start <<EOF
 #!/bin/bash
 export HOME=/app
@@ -60,7 +62,6 @@ for file in $app_root/.profile.d/*; do source \$file; done
 hash -r
 cd $app_root
 
-main_js=$(python -c "import sys, json; print json.load(sys.stdin).get('main', 'index.js')" < $app_root/package.json)
 node $main_js \$@
 
 EOF
