@@ -3,13 +3,6 @@
 # Prepares the "stack" to run apps and the environment to run buildpacks
 #
 
-ADD ./sources.list /etc/apt/
-
-RUN apt-get update
-RUN apt-get install yandex-archive-keyring -y --force-yes
-
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7FCD11186050CD1A
-
 apt-get update
 xargs apt-get install -y < /build/packages.txt
 apt-get clean
