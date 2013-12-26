@@ -2,7 +2,8 @@ FROM ubuntu:precise
 MAINTAINER diunko "oil.crayons@gmail.com"
 
 RUN mkdir /build
-ADD ./stack/ /build
+# rename
+ADD ./build/ /build
 
 ADD ./sources.list /etc/apt/
 RUN apt-get update

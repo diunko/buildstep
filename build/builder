@@ -1,0 +1,36 @@
+#!/bin/bash
+set -e
+
+app_root=/app
+build_root=/build/app
+cache_root=/cache/app
+buildpack_root=/build/buildpacks
+
+cp -r /app /build
+
+buildpacks=($buildpack_root/*)
+selected_buildpack=
+
+mkdir -p $cache_root
+mkdir -p $build_root/.profile.d
+
+for buildpack in "${buildpacks[@]}"; do
+  buildpack_name=$($buildpack/bin/detect "$build_root") && selected_buildpack=$buildpack && break
+done
+
+
+if [ -n "$selected_buildpack" ]; then
+  echo "       $buildpack_name app detected"
+else
+  echo "       Unable to select a buildpack"
+  exit 1
+fi
+
+# generate a random request id used by buildpack instrumentation
+export REQUEST_ID=$(openssl rand -base64 32)
+
+$selected_buildpack/bin/compile "$build_root" "$cache_root"
+
+rm -fR /app
+mv /build/app /
+
