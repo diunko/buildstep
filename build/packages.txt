@@ -22,3 +22,5 @@ msgpack-python
 libmsgpack-dev
 libcocaine-core2
 libcocaine-dev
+libboost-system1.46-dev
+
