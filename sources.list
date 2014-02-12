@@ -7,11 +7,4 @@ deb http://mirror.yandex.ru/ubuntu precise-updates multiverse
 deb http://mirror.yandex.ru/ubuntu precise-security main restricted
 deb http://mirror.yandex.ru/ubuntu precise-security universe
 deb http://mirror.yandex.ru/ubuntu precise-security multiverse
-deb http://dist.yandex.ru/system configs/all/
-deb http://dist.yandex.ru/system precise/all/
-deb http://dist.yandex.ru/system precise/amd64/
-deb http://dist.yandex.ru/common stable/all/
-deb http://dist.yandex.ru/common stable/amd64/
-deb http://dist.yandex.ru/yandex-precise stable/all/
-deb http://dist.yandex.ru/yandex-precise stable/amd64/
 deb http://dist.yandex.ru/fromjetstyle stable/all/
